@@ -1,3 +1,4 @@
 .direnv
 .envrc
 package-lock.json
+node_modules
