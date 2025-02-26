@@ -25,6 +25,7 @@ jobs:
 
       - name: Check if package-lock.json changed at all
         id: package-lock-changed
+        continue-on-error: true
         run: "! git diff --exit-code -- package-lock.json"
 
       - name: "[package-lock.json didn't change] Log that it didn't change"
