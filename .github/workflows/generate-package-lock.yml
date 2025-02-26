@@ -28,7 +28,7 @@ jobs:
 
       - name: Check if package-lock.json changed at all
         run: |
-          ! git diff --exit-code -- package-lock.json || echo "::warning package-lock.json had no updates!"
+          ! git diff --exit-code -- package-lock.json || echo "::warning::package-lock.json had no updates!"
 
       - name: Commit and push new package-lock.json
         run: |
