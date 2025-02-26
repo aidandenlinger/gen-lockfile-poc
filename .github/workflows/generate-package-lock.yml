@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   generate-lockfile:
-    if: github.ref_name != 'main'  # This should only be run on PRs
+    if: ! contains(fromJSON('["main"]'), github.ref_name)  # This should only be run on PRs
 
     name: Generate package-lock.json
     runs-on: ubuntu-latest
