@@ -4,8 +4,5 @@
   "description": "testing gh actions",
   "main": "index.js",
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "is-even": "^1.0.0"
-  }
+  "license": "ISC"
 }
