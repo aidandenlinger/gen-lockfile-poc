@@ -1,0 +1,38 @@
+name: Generate package-lock.json
+on:
+  workflow_dispatch:
+  
+permissions:
+  # Needs to commit to this repo
+  contents: write
+
+jobs:
+  generate-lockfile:
+    name: Generate package-lock.json
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # 4.2.2
+      
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # 4.2.0
+        with:
+          node-version: 22
+          
+      - name: Set git user to github-actions[bot]
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+      - name: Generate package-lock.json
+        run: npm i --package-lock-only
+
+      - name: Check if package-lock.json changed at all
+        run: |
+          git diff --exit-code -- package-lock.json || echo "::warning package-lock.json had no updates!"
+
+      - name: Commit and push new package-lock.json
+        run: |
+          set -o pipefail
+          git add package-lock.json
+          git commit -m "Generated new package-lock.json"  # NOTE: This will fail if package-lock.json wasn't updated
+          git push
