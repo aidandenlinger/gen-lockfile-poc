@@ -29,12 +29,25 @@ jobs:
         run: npm i --package-lock-only
 
       - name: Check if package-lock.json changed at all
+        id: package-lock-changed
         run: |
-          ! git diff --exit-code -- package-lock.json || echo "::warning::package-lock.json had no updates!"
+          ! git diff --exit-code -- package-lock.json || (echo "::error::package-lock.json had no updates! Aborting"; exit 1)
 
-      - name: Commit and push new package-lock.json
+      # Use the REST API to commit changes, so we get automatic commit signing
+      # https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
+      - name: Commit and push package-lock.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILE_TO_COMMIT: package-lock.json
+          DESTINATION_BRANCH: ${{ github.ref_name }}
         run: |
-          set -o pipefail
-          git add package-lock.json
-          git commit -m "Generated new package-lock.json"  # NOTE: This will fail if package-lock.json wasn't updated
-          git push
+          export TODAY=$( date -u '+%Y-%m-%d' )
+          export MESSAGE="chore: regenerate package-lock.json (Action ${{ github.run_id }})"
+          export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
+          export CONTENT=$( base64 -i $FILE_TO_COMMIT )
+          gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
+            --field message="$MESSAGE" \
+            --field content="$CONTENT" \
+            --field encoding="base64" \
+            --field branch="$DESTINATION_BRANCH" \
+            --field sha="$SHA"
