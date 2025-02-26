@@ -24,12 +24,17 @@ jobs:
         run: npm i --package-lock-only
 
       - name: Check if package-lock.json changed at all
-        run: |
-          ! git diff --exit-code -- package-lock.json || (echo "::error::package-lock.json had no updates! Aborting"; exit 1)
+        id: package-lock-changed
+        run: "! git diff --exit-code -- package-lock.json"
+
+      - name: "[package-lock.json didn't change] Log that it didn't change"
+        if: steps.package-lock-changed.outcome == 'failure'
+        run: echo "::info::package-lock.json didn't change, not committing anything"
 
       # Use the REST API to commit changes, so we get automatic commit signing
       # https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
-      - name: Commit and push package-lock.json
+      - name: "[package-lock.json changed] Commit and push package-lock.json"
+        if: steps.package-lock-changed.outcome == 'success'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILE_TO_COMMIT: package-lock.json
