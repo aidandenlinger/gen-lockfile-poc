@@ -30,7 +30,7 @@ jobs:
 
       - name: "[package-lock.json didn't change] Log that it didn't change"
         if: steps.package-lock-changed.outcome == 'failure'
-        run: echo "::info::package-lock.json didn't change, not committing anything"
+        run: echo "::notice::package-lock.json didn't change, not committing anything"
 
       # Use the REST API to commit changes, so we get automatic commit signing
       # https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
