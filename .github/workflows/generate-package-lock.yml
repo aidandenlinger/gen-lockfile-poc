@@ -24,7 +24,6 @@ jobs:
         run: npm i --package-lock-only
 
       - name: Check if package-lock.json changed at all
-        id: package-lock-changed
         run: |
           ! git diff --exit-code -- package-lock.json || (echo "::error::package-lock.json had no updates! Aborting"; exit 1)
 
@@ -36,7 +35,6 @@ jobs:
           FILE_TO_COMMIT: package-lock.json
           DESTINATION_BRANCH: ${{ github.ref_name }}
         run: |
-          export TODAY=$( date -u '+%Y-%m-%d' )
           export MESSAGE="chore: regenerate package-lock.json
 
           ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
