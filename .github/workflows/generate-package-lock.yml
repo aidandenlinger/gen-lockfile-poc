@@ -20,11 +20,6 @@ jobs:
         with:
           node-version: 22
           
-      - name: Set git user to github-actions[bot]
-        run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
       - name: Generate package-lock.json
         run: npm i --package-lock-only
 
