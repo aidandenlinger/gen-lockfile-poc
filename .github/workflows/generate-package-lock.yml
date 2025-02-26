@@ -42,7 +42,7 @@ jobs:
           DESTINATION_BRANCH: ${{ github.ref_name }}
         run: |
           export TODAY=$( date -u '+%Y-%m-%d' )
-          export MESSAGE="chore: regenerate package-lock.json (Action ${{ github.run_id }})"
+          export MESSAGE="chore: regenerate package-lock.json ((Action #${{ github.run_id }}))[${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
           export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
           export CONTENT=$( base64 -i $FILE_TO_COMMIT )
           gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
