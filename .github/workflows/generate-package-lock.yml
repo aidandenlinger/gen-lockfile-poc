@@ -1,4 +1,4 @@
-name: Generate package-lock.json
+name: Check package-lock.json
 on:
   workflow_dispatch:
   
@@ -7,10 +7,10 @@ permissions:
   contents: write
 
 jobs:
-  generate-lockfile:
+  check-lockfile:
     if: ${{ !contains(fromJSON('["main", "dont-run-on-me"]'), github.ref_name) }} # This should only be run on PRs
 
-    name: Generate package-lock.json
+    name: Check package-lock.json
     runs-on: ubuntu-latest
     
     steps:
